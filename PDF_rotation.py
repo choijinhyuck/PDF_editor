@@ -1,4 +1,22 @@
-import os, sys
+import os, sys, PyPDF2
+
+def rotate(file_name, processed_name, angle):
+    pdf_in = open(file_name, "rb")
+    pdf_reader = PyPDF2.PdfReader(pdf_in)
+    pdf_writer = PyPDF2.PdfWriter()
+
+    for pagenum in range(len(pdf_reader.pages)):
+        page = pdf_reader.pages[pagenum]
+        page.rotate(angle)
+        pdf_writer.add_page(page)
+
+    pdf_out = open(processed_name, "wb")
+    pdf_writer.write(pdf_out)
+    pdf_out.close()
+    pdf_in.close()
+
+    print("변환 완료!")
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 4:
@@ -67,22 +85,5 @@ if __name__ == "__main__":
                     continue
                 else:
                     break
-
-
-import PyPDF2
-
-pdf_in = open(file_name, "rb")
-pdf_reader = PyPDF2.PdfReader(pdf_in)
-pdf_writer = PyPDF2.PdfWriter()
-
-for pagenum in range(len(pdf_reader.pages)):
-    page = pdf_reader.pages[pagenum]
-    page.rotate(angle)
-    pdf_writer.add_page(page)
-
-pdf_out = open(processed_name, "wb")
-pdf_writer.write(pdf_out)
-pdf_out.close()
-pdf_in.close()
-
-print("변환 완료!")
+    
+    rotate(file_name, processed_name, angle)
